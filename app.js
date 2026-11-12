@@ -53,30 +53,51 @@ function gasVerifyGoogle(credential) {
     document.body.appendChild(script);
   });
 }
+function decodeGoogleCredential(credential) {
+  try {
+    const encoded = String(credential || '').split('.')[1];
+    if (!encoded) throw new Error('Google 登入憑證格式不正確。');
+    const payload = JSON.parse(decodeURIComponent(escape(atob(encoded.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - encoded.length % 4) % 4)))));
+    if (payload.aud !== GOOGLE_CLIENT_ID) throw new Error('Google Client ID 不符。');
+    if (String(payload.email_verified).toLowerCase() !== 'true') throw new Error('Google 帳號尚未完成驗證。');
+    if (String(payload.email || '').toLowerCase() !== 'notemaker@gmail.com') throw new Error('此 Google 帳號沒有管理權限。');
+    return { email: String(payload.email), name: String(payload.name || ''), picture: String(payload.picture || '') };
+  } catch (error) { throw new Error(error.message || 'Google 登入憑證無法讀取。'); }
+}
 function initializeGoogleIdentity() {
   if (!window.google?.accounts?.id) return false;
   google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleCredential, auto_select: false });
   return true;
 }
 async function beginGoogleLogin() {
-  if (!state.config.gasUrl) { location.hash = '#/settings'; showToast('請先在資料來源頁設定 GAS /exec 網址。'); return; }
   if (!initializeGoogleIdentity()) return showToast('Google 登入元件尚未載入，請重新整理後再試。', 'error');
   google.accounts.id.prompt();
 }
 async function handleGoogleCredential(response) {
   try {
-    const user = await gasVerifyGoogle(response.credential);
+    const localUser = decodeGoogleCredential(response.credential);
+    let user = localUser;
+    if (state.config.gasUrl) {
+      try { user = await gasVerifyGoogle(response.credential); state.connectionIssue = false; }
+      catch (error) { state.connectionIssue = true; showToast(`Google 已登入，但 GAS 尚未連線：${error.message}`, 'error'); }
+    }
     sessionStorage.setItem('jijifarm-google-id-token', response.credential);
     state.auth = { authenticated: true, user };
     render();
-    showToast(`已使用 ${user.email} 登入。`);
+    if (!state.config.gasUrl) showToast(`已使用 ${user.email} 登入，請接著設定 GAS /exec。`);
   } catch (error) { sessionStorage.removeItem('jijifarm-google-id-token'); state.auth = { authenticated: false, user: null }; showToast(error.message, 'error'); }
 }
 async function loadAuth() {
   const credential = sessionStorage.getItem('jijifarm-google-id-token');
-  if (!credential || !state.config.gasUrl) { state.auth = { authenticated: false, user: null }; return; }
-  try { const user = await gasVerifyGoogle(credential); state.auth = { authenticated: true, user }; }
-  catch { sessionStorage.removeItem('jijifarm-google-id-token'); state.auth = { authenticated: false, user: null }; }
+  if (!credential) { state.auth = { authenticated: false, user: null }; return; }
+  try {
+    let user = decodeGoogleCredential(credential);
+    if (state.config.gasUrl) {
+      try { user = await gasVerifyGoogle(credential); state.connectionIssue = false; }
+      catch { state.connectionIssue = true; }
+    }
+    state.auth = { authenticated: true, user };
+  } catch { sessionStorage.removeItem('jijifarm-google-id-token'); state.auth = { authenticated: false, user: null }; }
 }
 function logoutGoogle() { sessionStorage.removeItem('jijifarm-google-id-token'); state.auth = { authenticated: false, user: null }; render(); showToast('已登出 Google 管理帳號。'); }
 function isAuthenticated() { return state.auth.authenticated === true; }
