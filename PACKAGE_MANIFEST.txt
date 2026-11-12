@@ -1,0 +1,8 @@
+集集興農產品速查網｜GitHub notemaker/jijisinon
+
+Node.js 入口：server.js
+啟動命令：npm start
+前端目錄：public/
+GAS 程式：gas/Code.gs 與根目錄可直接貼上版
+
+請勿提交 .env、OAuth Secret、JWT Secret 或私密 GAS /exec 網址。
