@@ -86,7 +86,7 @@ main { min-height: calc(100vh - 140px); }
 .hero-kicker::before { content: ""; width: 28px; height: 3px; border-radius: 99px; background: var(--green); }
 .hero h1 { max-width: 680px; margin: 18px 0 20px; font-size: clamp(38px, 5.8vw, 76px); letter-spacing: -.075em; line-height: 1.05; font-weight: 900; }
 .hero h1 em { color: var(--green); font-style: normal; }
-.hero-lead { max-width: 590px; margin: 0; color: var(--muted); font-size: clamp(16px, 2vw, 20px); line-height: 1.85; }
+.hero-lead { max-width: 590px; margin: 0; color: #c62828; font-size: clamp(19px, 2vw, 23px); font-weight: 800; line-height: 1.7; }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 31px; }
 .home-search-form { display: grid; gap: 10px; width: min(510px, 100%); }
 .home-search-action { display: flex; }
@@ -287,15 +287,19 @@ main { min-height: calc(100vh - 140px); }
   .brand-copy small { font-size: 16px; }
   .topnav { font-size: 16px; }
   .hero-kicker { font-size: 15px; }
-  .hero-lead { font-size: 18px; line-height: 1.9; }
+  .hero-lead { font-size: 21px; line-height: 1.7; }
   .search-box input, .search-box button { font-size: 16px; }
   .search-filter-row select { min-height: 48px; font-size: 22px; }
   .hero-note { font-size: 15px; line-height: 1.7; }
   .section-heading p, .page-intro p { font-size: 16px; line-height: 1.85; }
   .section-eyebrow { font-size: 13px; }
-  .category-tile h3 { font-size: 34px; }
-  .category-tile p { font-size: 15px; line-height: 1.8; }
-  .category-tile .chip, .chip { font-size: 14px; padding: 7px 10px; }
+  .category-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
+  .category-tile { min-height: 155px; padding: 10px 6px; border-radius: 13px; }
+  .category-tile .tile-arrow { width: 24px; height: 24px; font-size: 14px; }
+  .category-tile h3 { font-size: 18px; margin-bottom: 0; white-space: nowrap; }
+  .category-tile p, .category-tile .chip-row { display: none; }
+  .category-tile::before { right: -18px; bottom: -25px; width: 78px; height: 78px; border-width: 13px; }
+  .category-tile::after { right: 8px; bottom: 15px; width: 23px; height: 23px; }
   .tile-index { font-size: 13px; }
   .subcategory-link { min-height: 82px; font-size: 16px; line-height: 1.5; }
   .subcategory-link.active { font-size: 26px; }
