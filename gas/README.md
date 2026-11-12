@@ -12,6 +12,18 @@ id | name | slug | categorySlug | categoryName | subCategory | summary | imageUr
 
 `setup()` 同時建立 `公告` 工作表，欄位為 `key | value | updatedAt`。網站連線 GAS 後，首頁會用 `action=announcement` 讀取公告；公告設定儲存時會用 `saveAnnouncement` 寫回這個工作表，因此桌機、手機與平板可讀取同一份公告。
 
+## Google 登入與公告管理
+
+前端使用 Google Identity Services 取得 ID Token，GAS 的 `verifyGoogle_()` 會向 Google 驗證 Token 的 `aud`、`email_verified` 與 email。只有 `notemaker@gmail.com` 可以通過管理員驗證；公告讀取仍可公開，公告寫入與產品寫入必須帶有效 Google ID Token。
+
+程式中的 `CONFIG.GOOGLE_CLIENT_ID` 是 Web Client ID，可以放在程式中；不要把 OAuth Client Secret 放到 GitHub、前端或 Apps Script。這個流程使用 Google Identity Services ID Token，不需要在前端使用 Client Secret。
+
+部署 GAS Web App 後，將正式 `/exec` 網址填入網站「資料來源」。Google Cloud OAuth Web Client 的授權 JavaScript 來源加入：
+
+```text
+https://notemaker.github.io
+```
+
 ## 部署步驟
 
 1. 建立一份專用 Google 試算表。

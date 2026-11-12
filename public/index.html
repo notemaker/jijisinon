@@ -23,7 +23,7 @@
       <a href="#/consultation">諮詢清單 <span id="consultation-count" class="nav-count">0</span></a>
       <a href="#/settings" data-auth-only hidden>資料來源</a>
       <a href="#/admin" class="admin-link" data-auth-only hidden>管理後台</a>
-      <a href="/auth/login" id="auth-action" class="auth-link">登入</a>
+      <button id="auth-action" class="auth-link" type="button">Google 登入</button>
     </nav>
     <button id="mobile-menu" class="icon-button mobile-menu" aria-label="開啟選單" aria-expanded="false">☰</button>
   </header>
@@ -55,6 +55,7 @@
   </footer>
 
   <div id="toast-region" class="toast-region" aria-live="polite"></div>
-  <script src="./app.js?v=drive-image-embed" defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="./app.js?v=google-gas-auth" defer></script>
 </body>
 </html>

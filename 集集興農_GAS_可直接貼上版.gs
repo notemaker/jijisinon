@@ -14,7 +14,9 @@ const CONFIG = {
   SPREADSHEET_ID: '1T7ThkOGBhswta9o1VCOh57PkRA7Pnnzm3Lwz1T4cuJI',
   SHEET_NAME: '產品',
   IMAGE_FOLDER_NAME: '集集興農產品圖片',
-  TIMEZONE: 'Asia/Taipei'
+  TIMEZONE: 'Asia/Taipei',
+  GOOGLE_CLIENT_ID: '736171088462-1b3r0gar6sd7q9tsndc02vbrjq3m8nk7.apps.googleusercontent.com',
+  ADMIN_EMAIL: 'notemaker@gmail.com'
 };
 
 const HEADERS = [
@@ -62,6 +64,7 @@ function doGet(e) {
   try {
     if (action === 'status') payload = status_(String(e.parameter.requestId || ''));
     else if (action === 'announcement') payload = { ok: true, announcement: readAnnouncement_(), updatedAt: new Date().toISOString() };
+    else if (action === 'verifyGoogle') payload = verifyGoogle_(String(e.parameter.credential || ''));
     else if (action === 'list') payload = { ok: true, records: readPublished_(), updatedAt: new Date().toISOString() };
     else if (action === 'all') payload = { ok: true, records: readAll_(), updatedAt: new Date().toISOString() };
     else payload = { ok: false, error: '不支援的讀取 action' };
@@ -83,6 +86,7 @@ function doPost(e) {
 function mutate_(input) {
   const requestId = String(input.requestId || '');
   if (!requestId) throw new Error('缺少 requestId');
+  const user = assertAdmin_(String(input.credential || ''));
   const props = PropertiesService.getScriptProperties();
   const previous = props.getProperty(`request:${requestId}`);
   if (previous) return JSON.parse(previous);
@@ -96,7 +100,7 @@ function mutate_(input) {
     else if (input.action === 'edit') result = editProduct_(input.record || {});
     else if (input.action === 'saveAnnouncement') result = saveAnnouncement_(input.record || {});
     else throw new Error('不支援的寫入 action');
-    const receipt = { ok: true, done: true, requestId, result };
+    const receipt = { ok: true, done: true, requestId, result, user };
     props.setProperty(`request:${requestId}`, JSON.stringify(receipt));
     return receipt;
   } finally { lock.releaseLock(); }
@@ -107,6 +111,18 @@ function status_(requestId) {
   const saved = PropertiesService.getScriptProperties().getProperty(`request:${requestId}`);
   return saved ? JSON.parse(saved) : { ok: true, done: false, requestId };
 }
+
+function verifyGoogle_(credential) {
+  if (!credential) throw new Error('缺少 Google 登入憑證');
+  const response = UrlFetchApp.fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(credential)}`, { muteHttpExceptions: true });
+  const payload = JSON.parse(response.getContentText() || '{}');
+  if (response.getResponseCode() !== 200 || payload.aud !== CONFIG.GOOGLE_CLIENT_ID) throw new Error('Google 登入憑證無效或 Client ID 不符');
+  if (String(payload.email_verified).toLowerCase() !== 'true') throw new Error('Google 帳號尚未完成驗證');
+  if (String(payload.email || '').toLowerCase() !== CONFIG.ADMIN_EMAIL.toLowerCase()) throw new Error('此 Google 帳號沒有公告管理權限');
+  return { email: String(payload.email), name: String(payload.name || ''), picture: String(payload.picture || '') };
+}
+
+function assertAdmin_(credential) { return verifyGoogle_(credential); }
 
 function readAll_() {
   const sheet = getSheet_();

@@ -42,7 +42,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .topnav a { padding: 10px 12px; border-radius: 999px; transition: background .2s, color .2s; }
 .topnav a:hover { background: #e9f1e8; color: var(--green); }
 .admin-link { color: var(--green); }
-.auth-link { color: #fff !important; background: var(--green); font-weight: 900; }
+.auth-link { border: 0; color: #fff !important; background: var(--green); font-weight: 900; }
 .auth-link:hover { background: #08713d !important; color: #fff !important; }
 .auth-link.is-logged-in { background: #edf4ec; color: var(--green) !important; }
 .auth-link.is-logged-in:hover { background: #dcebdc !important; }
