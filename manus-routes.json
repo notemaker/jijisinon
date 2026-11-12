@@ -1,0 +1,12 @@
+{
+  "routes": [
+    {"path":"/","title":"集集興農產品速查網"},
+    {"path":"/home","title":"集集興農產品速查網"},
+    {"path":"/category/:categorySlug","title":"產品大分類"},
+    {"path":"/category/:categorySlug/:subCategorySlug","title":"產品子分類"},
+    {"path":"/products/:productId","title":"產品詳情"},
+    {"path":"/consultation","title":"諮詢清單"},
+    {"path":"/admin","title":"產品管理"},
+    {"path":"/settings","title":"資料來源設定"}
+  ]
+}

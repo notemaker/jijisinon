@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b8f4d" />
+  <meta name="description" content="集集興農產品速查網：依分類、標籤與作物快速查找農業產品。" />
+  <title>集集興農產品速查網</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css?v=manus-auth" />
+</head>
+<body>
+  <div class="site-noise" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="#/home" aria-label="回到集集興農首頁">
+      <span class="brand-mark"><span></span><span></span><span></span><span></span></span>
+      <span class="brand-copy"><strong>集集興農</strong><small>產品速查網</small></span>
+    </a>
+    <nav class="topnav" aria-label="主要導覽">
+      <a href="#/home">產品分類</a>
+      <a href="#/consultation">諮詢清單 <span id="consultation-count" class="nav-count">0</span></a>
+      <a href="#/settings" data-auth-only hidden>資料來源</a>
+      <a href="#/admin" class="admin-link" data-auth-only hidden>管理後台</a>
+      <a href="/auth/login" id="auth-action" class="auth-link">登入</a>
+    </nav>
+    <button id="mobile-menu" class="icon-button mobile-menu" aria-label="開啟選單" aria-expanded="false">☰</button>
+  </header>
+
+  <main id="app" tabindex="-1"></main>
+
+  <div id="announcement-lightbox" class="announcement-lightbox" hidden role="dialog" aria-modal="true" aria-labelledby="announcement-lightbox-title">
+    <div class="announcement-lightbox-backdrop" data-close-announcement-lightbox></div>
+    <section class="announcement-lightbox-panel" role="document">
+      <button id="announcement-lightbox-close" class="announcement-lightbox-close" type="button" aria-label="關閉公告圖片">×</button>
+      <p class="announcement-lightbox-label">最新公告</p>
+      <h2 id="announcement-lightbox-title">活動圖片</h2>
+      <img id="announcement-lightbox-image" src="" alt="放大的公告活動圖片" />
+      <p class="announcement-lightbox-hint">點擊右上角或圖片外部即可關閉</p>
+    </section>
+  </div>
+
+  <footer class="site-footer">
+    <div>
+      <strong>集集興農產品速查網</strong>
+      <span class="footer-contact">店面：<a href="tel:0492761777">049-2761777</a>　手機：<a href="tel:0928925009">0928-925-009</a></span>
+      <span>找產品、看用途、直接諮詢。</span>
+    </div>
+    <div class="footer-meta">
+      <span id="footer-mode">示範資料模式</span>
+      <span>｜</span>
+      <span>農業使用資訊請依產品標示與合法規範為準</span>
+    </div>
+  </footer>
+
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+  <script src="./app.js?v=drive-image-embed" defer></script>
+</body>
+</html>
