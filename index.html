@@ -21,8 +21,8 @@
     <nav class="topnav" aria-label="主要導覽">
       <a href="#/home">產品分類</a>
       <a href="#/consultation">諮詢清單 <span id="consultation-count" class="nav-count">0</span></a>
-      <a href="#/settings" data-auth-only hidden>資料來源</a>
-      <a href="#/admin" class="admin-link" data-auth-only hidden>管理後台</a>
+      <a href="#/settings">資料來源</a>
+      <a href="#/admin" class="admin-link" data-auth-only="admin" hidden>管理後台</a>
       <button id="auth-action" class="auth-link" type="button">Google 登入</button>
     </nav>
     <button id="mobile-menu" class="icon-button mobile-menu" aria-label="開啟選單" aria-expanded="false">☰</button>
@@ -56,6 +56,6 @@
 
   <div id="toast-region" class="toast-region" aria-live="polite"></div>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script src="./app.js?v=google-gas-auth" defer></script>
+  <script src="./app.js?v=google-gas-config-flow" defer></script>
 </body>
 </html>
