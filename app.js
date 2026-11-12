@@ -123,7 +123,7 @@ async function loadProducts() {
     showToast(`GAS 讀取失敗，已暫時回到示範資料：${error.message}`, 'error');
   }
   if (state.config.gasUrl) {
-    try { await loadRemoteAnnouncement(); } catch (error) { showToast(`公告尚未同步：${error.message}`, 'error'); }
+    try { await loadRemoteAnnouncement(); } catch (error) { state.connectionIssue = true; showToast(`公告尚未同步：${error.message}`, 'error'); }
   }
 }
 function gasRead(action) {
@@ -187,7 +187,7 @@ function gasStatus(requestId) {
   });
 }
 
-function updateChrome() { $('#consultation-count').textContent = state.consultation.length; $('#footer-mode').textContent = currentMode() === 'connected' ? '已連接 Google 試算表' : '示範資料模式'; $$('[data-auth-only]').forEach(link => { link.hidden = link.dataset.authOnly === 'admin' && !isAuthenticated(); }); const authAction = $('#auth-action'); if (authAction) { authAction.textContent = isAuthenticated() ? '登出' : 'Google 登入'; authAction.onclick = isAuthenticated() ? logoutGoogle : beginGoogleLogin; authAction.classList.toggle('is-logged-in', isAuthenticated()); authAction.title = isAuthenticated() ? `${state.auth.user?.email || ''}｜登出` : '使用 Google 登入'; } $('.topnav')?.classList.toggle('open', state.mobileMenu); $('#mobile-menu')?.setAttribute('aria-expanded', String(state.mobileMenu)); }
+function updateChrome() { $('#consultation-count').textContent = state.consultation.length; $('#footer-mode').textContent = currentMode() === 'connected' ? '已連接 Google 試算表' : '示範資料模式'; const sourceLink = $('#data-source-link'); if (sourceLink) sourceLink.hidden = Boolean(state.config.gasUrl && !state.connectionIssue); $$('[data-auth-only]').forEach(link => { link.hidden = link.dataset.authOnly === 'admin' && !isAuthenticated(); }); const authAction = $('#auth-action'); if (authAction) { authAction.textContent = isAuthenticated() ? '登出' : 'Google 登入'; authAction.onclick = isAuthenticated() ? logoutGoogle : beginGoogleLogin; authAction.classList.toggle('is-logged-in', isAuthenticated()); authAction.title = isAuthenticated() ? `${state.auth.user?.email || ''}｜登出` : '使用 Google 登入'; } $('.topnav')?.classList.toggle('open', state.mobileMenu); $('#mobile-menu')?.setAttribute('aria-expanded', String(state.mobileMenu)); }
 function render() { updateChrome(); const path = location.hash ? location.hash.replace(/^#/, '') : (location.pathname === '/' ? '/home' : location.pathname); const [route, ...rest] = path.split('/').filter(Boolean); if (route === 'category') return renderCategory(rest[0], rest[1]); if (route === 'products') return renderProduct(rest[0]); if (route === 'consultation') return renderConsultationPage(); if (route === 'settings') return renderSettings(); if (route === 'admin') return isAuthenticated() ? renderAdmin() : renderLoginRequired(); return renderHome(); }
 function shell(content) { $('#app').innerHTML = content; $('#app').focus({ preventScroll: true }); updateChrome(); }
 function renderHome() {
@@ -203,7 +203,7 @@ function renderHome() {
       </div>
       <div class="map-card"><img src="${CATEGORY_IMAGE}" alt="興農產品四大分類圖" /></div>
     </section>
-    <div class="section-heading"><div><p class="section-eyebrow">產品分類</p><h2>從四大分類開始</h2></div><p>依照興農分類圖整理，點選一區後可以再往下選子分類。</p></div>
+    <div class="section-heading"><div class="section-title-row">${currentMode() === 'connected' ? '<span class="pill connected home-connection-status">● 已連接</span>' : ''}<div><p class="section-eyebrow">產品分類</p><h2>從四大分類開始</h2></div></div><p>依照興農分類圖整理，點選一區後可以再往下選子分類。</p></div>
     <section class="category-grid">${categories.map((cat, index) => categoryTile(cat, index)).join('')}</section>
     <section class="info-strip">
       <article class="info-card"><strong>看圖找產品</strong><p>產品卡片優先呈現包裝圖與關鍵標籤，適合手機快速掃讀。</p></article>
