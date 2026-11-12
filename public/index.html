@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./styles.css?v=connection-status-ui" />
+  <link rel="stylesheet" href="./styles.css?v=header-connection-status" />
 </head>
 <body>
   <div class="site-noise" aria-hidden="true"></div>
@@ -19,6 +19,7 @@
       <span class="brand-copy"><strong>集集興農</strong><small>產品速查網</small></span>
     </a>
     <nav class="topnav" aria-label="主要導覽">
+      <span id="header-connection-status" class="pill connected header-connection-status" hidden>● 已連線</span>
       <a href="#/home">產品分類</a>
       <a href="#/settings" id="data-source-link" hidden>資料來源</a>
       <a href="#/admin" class="admin-link" data-auth-only="admin" hidden>管理後台</a>
@@ -55,6 +56,6 @@
 
   <div id="toast-region" class="toast-region" aria-live="polite"></div>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script src="./app.js?v=google-login-independent" defer></script>
+  <script src="./app.js?v=header-connection-status" defer></script>
 </body>
 </html>

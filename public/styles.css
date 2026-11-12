@@ -39,6 +39,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .brand-copy strong { font-size: 27px; letter-spacing: .08em; }
 .brand-copy small { color: var(--muted); font-size: 16px; letter-spacing: .16em; margin-top: 3px; }
 .topnav { display: flex; align-items: center; gap: 6px; color: #48544c; font-size: 14px; font-weight: 700; }
+.header-connection-status { flex: 0 0 auto; white-space: nowrap; font-size: 13px; }
 .topnav a { padding: 10px 12px; border-radius: 999px; transition: background .2s, color .2s; }
 .topnav a:hover { background: #e9f1e8; color: var(--green); }
 .admin-link { color: var(--green); }
