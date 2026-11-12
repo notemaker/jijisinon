@@ -1,4 +1,3 @@
-const CATEGORY_IMAGE = './sinnon-category-map.png';
 const GOOGLE_CLIENT_ID = '736171088462-1b3r0gar6sd7q9tsndc02vbrjq3m8nk7.apps.googleusercontent.com';
 const STORAGE_KEYS = { config: 'jijifarm-gas-config', localProducts: 'jijifarm-local-products' };
 
@@ -225,11 +224,10 @@ function renderHome() {
     ${announcement.enabled ? `<aside class="announcement" aria-label="最新公告"><span class="announcement-badge">最新公告</span>${announcementImage ? `<button class="announcement-image-trigger" type="button" data-announcement-image="${escapeHtml(announcementImage)}" data-announcement-title="${escapeHtml(announcement.title)}" aria-label="放大查看公告圖片"><img class="announcement-image" src="${escapeHtml(announcementImage)}" alt="活動圖片，點擊放大" /></button>` : ''}<div class="announcement-copy"><strong>${escapeHtml(announcement.title)}</strong><p>${escapeHtml(announcement.body)}</p><small>LINE 官方帳號：${escapeHtml(announcement.lineAccount)}</small></div><div class="announcement-line-area"><img src="${escapeHtml(assetUrl(announcement.qrImage))}" alt="LINE 官方帳號 QR Code" /><a class="btn announcement-line ${lineUrl ? '' : 'is-disabled'}" href="${lineUrl ? escapeHtml(lineUrl) : '#/settings'}" ${lineUrl ? 'target="_blank" rel="noopener"' : ''}>加入 LINE 官方帳號</a></div></aside>` : ''}
     <section class="hero">
       <div>
-        <h1>農業<em>產品查找</em></h1>
-        <p class="hero-lead">把農業產品依照用途與分類整理好，讓你在田邊、店裡或手機上，都能快速找到需要的資料。</p>
-        <div class="hero-actions"><form class="home-search-form" id="home-search"><div class="search-filter-row"><label><span>大分類</span><select name="homeCategory" id="home-category-select"><option value="all">全部大分類</option>${categories.map(cat => `<option value="${cat.slug}">${cat.name}</option>`).join('')}</select></label><label><span>子分類</span><select name="homeSubCategory" id="home-subcategory-select"><option value="">全部子分類</option></select></label></div><div class="home-search-action"><button type="submit">開始查找</button></div></form></div>
+        <h1>本店<em>產品查詢</em></h1>
+        <p class="hero-lead">大分類--&gt;小分類--&gt;點「開始查詢」按鈕</p>
+        <div class="hero-actions"><form class="home-search-form" id="home-search"><div class="search-filter-row"><label><span>大分類</span><select name="homeCategory" id="home-category-select"><option value="all">全部大分類</option>${categories.map(cat => `<option value="${cat.slug}">${cat.name}</option>`).join('')}</select></label><label><span>子分類</span><select name="homeSubCategory" id="home-subcategory-select"><option value="">全部子分類</option></select></label></div><div class="home-search-action"><button type="submit">開始查詢</button></div></form></div>
       </div>
-      <div class="map-card"><img src="${CATEGORY_IMAGE}" alt="興農產品四大分類圖" /></div>
     </section>
     <div class="section-heading"><div class="section-title-row"><div><p class="section-eyebrow">產品分類</p><h2>從四大分類開始</h2></div></div><p>依照興農分類圖整理，點選一區後可以再往下選子分類。</p></div>
     <section class="category-grid">${categories.map((cat, index) => categoryTile(cat, index)).join('')}</section>
