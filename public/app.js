@@ -20,7 +20,7 @@ const demoProducts = [
 const storedConfig = loadJson(STORAGE_KEYS.config, { gasUrl: '' });
 const defaultAnnouncement = { enabled: true, title: '優惠與營業資訊', body: '最新產品、優惠與活動資訊將優先公告於此，歡迎先查看分類或直接來電洽詢。', lineUrl: 'https://lin.ee/xkrkExA', lineAccount: '@sn2761777', qrImage: './line-official-qr.png', imageUrl: '' };
 const storedAnnouncement = storedConfig.announcement || {};
-const state = { products: [], query: '', sort: 'name', config: { gasUrl: '', ...storedConfig, announcement: { ...defaultAnnouncement, ...storedAnnouncement, lineUrl: storedAnnouncement.lineUrl || defaultAnnouncement.lineUrl, lineAccount: storedAnnouncement.lineAccount || defaultAnnouncement.lineAccount, qrImage: storedAnnouncement.qrImage || defaultAnnouncement.qrImage } }, auth: { authenticated: false, user: null }, connectionIssue: false, editingId: '', mobileMenu: false };
+const state = { products: [], query: '', sort: 'name', config: { gasUrl: '', ...storedConfig, announcement: { ...defaultAnnouncement, ...storedAnnouncement, lineUrl: storedAnnouncement.lineUrl || defaultAnnouncement.lineUrl, lineAccount: storedAnnouncement.lineAccount || defaultAnnouncement.lineAccount, qrImage: storedAnnouncement.qrImage || defaultAnnouncement.qrImage } }, auth: { authenticated: false, user: null }, connectionIssue: false, connectionVerified: false, editingId: '', mobileMenu: false };
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const escapeHtml = (value = '') => String(value).replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
@@ -34,7 +34,7 @@ const safeImageSource = value => { const source = String(value || ''); return so
 const assetUrl = value => { const source = String(value || ''); return /^https?:\/\//.test(source) || source.startsWith('data:') ? source : `./${source.replace(/^\/+/, '')}`; };
 function loadJson(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } }
 function saveJson(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
-function currentMode() { return state.config.gasUrl && !state.connectionIssue ? 'connected' : 'demo'; }
+function currentMode() { return state.connectionVerified && !state.connectionIssue ? 'connected' : 'demo'; }
 function allProducts() { return [...state.products].filter(product => product.status === 'published'); }
 function productById(id) { return state.products.find(item => String(item.id) === String(id)); }
 function publishedProductById(id) { const product = productById(id); return product?.status === 'published' ? product : null; }
@@ -131,20 +131,23 @@ async function loadProducts() {
   const local = loadJson(STORAGE_KEYS.localProducts, []);
   if (!state.config.gasUrl) {
     state.connectionIssue = false;
+    state.connectionVerified = false;
     state.products = [...demoProducts, ...local];
     return;
   }
   try {
     const records = await gasRead('all');
     state.connectionIssue = false;
+    state.connectionVerified = true;
     state.products = records.map(normalizeProduct);
   } catch (error) {
     state.connectionIssue = true;
+    state.connectionVerified = false;
     state.products = [...demoProducts, ...local];
     showToast(`GAS 讀取失敗，已暫時回到示範資料：${error.message}`, 'error');
   }
   if (state.config.gasUrl) {
-    try { await loadRemoteAnnouncement(); } catch (error) { state.connectionIssue = true; showToast(`公告尚未同步：${error.message}`, 'error'); }
+    try { await loadRemoteAnnouncement(); } catch (error) { state.connectionIssue = true; state.connectionVerified = false; showToast(`公告尚未同步：${error.message}`, 'error'); }
   }
 }
 function gasRead(action) {
